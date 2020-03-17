@@ -9,10 +9,10 @@ we continue to grow.
 
 Here are suggested steps when evaluating a proposed new fair ML algorthm:
 
-*   Choose a [simulation environment](../environments/README.md).
-*   Decide on [metrics](../metrics) that
+*   Choose a [simulation environment](../ml_gym/environments/README.md).
+*   Decide on [metrics](../ml_gym/metrics) that
     you would like to measure for that environment.
-*   Choose baseline [agents](../agents)
+*   Choose baseline [agents](../ml_gym/agents)
     and choose what reward functions they will optimize.
 *   Write an agent that uses your new algorithm.
 *   Compare metrics between your baseline agents and your fair agent. Some

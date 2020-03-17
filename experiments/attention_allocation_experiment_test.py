@@ -15,80 +15,81 @@
 
 """Tests for attention_allocation_experiment.py."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-from absl.testing import absltest
-from agents import allocation_agents
-from agents import random_agents
-from environments import attention_allocation
-from experiments import attention_allocation_experiment
 import simplejson as json
+from absl.testing import absltest
+
+from experiments import attention_allocation_experiment
+from ml_gym.agents import allocation_agents, random_agents
+from ml_gym.environments import attention_allocation
 
 
 def _get_base_env_params():
-  return attention_allocation.Params(
-      n_locations=5,
-      prior_incident_counts=(500, 500, 500, 500, 500),
-      incident_rates=[2.3, 1.1, 1.8, .6, .3],
-      n_attention_units=4,
-      miss_incident_prob=(0., 0., 0., 0., 0.),
-      extra_incident_prob=(0., 0., 0., 0., 0.),
-      dynamic_rate=0.0)
+    return attention_allocation.Params(
+        n_locations=5,
+        prior_incident_counts=(500, 500, 500, 500, 500),
+        incident_rates=[2.3, 1.1, 1.8, 0.6, 0.3],
+        n_attention_units=4,
+        miss_incident_prob=(0.0, 0.0, 0.0, 0.0, 0.0),
+        extra_incident_prob=(0.0, 0.0, 0.0, 0.0, 0.0),
+        dynamic_rate=0.0,
+    )
 
 
 def _setup_experiment():
-  return attention_allocation_experiment.Experiment(
-      num_runs=1,
-      num_steps=10,
-      seed=0,
-      env_class=attention_allocation.LocationAllocationEnv,
-      env_params=_get_base_env_params(),
-      agent_class=random_agents.RandomAgent)
+    return attention_allocation_experiment.Experiment(
+        num_runs=1,
+        num_steps=10,
+        seed=0,
+        env_class=attention_allocation.LocationAllocationEnv,
+        env_params=_get_base_env_params(),
+        agent_class=random_agents.RandomAgent,
+    )
 
 
 class AttentionAllocationExperimentTest(absltest.TestCase):
+    def test_report_valid_json(self):
+        # Tests that the experiment can run.
+        experiment = _setup_experiment()
+        result = attention_allocation_experiment.run(experiment)
+        # Tests that the result is a valid json string.
+        result = json.loads(result)
 
-  def test_report_valid_json(self):
-    # Tests that the experiment can run.
-    experiment = _setup_experiment()
-    result = attention_allocation_experiment.run(experiment)
-    # Tests that the result is a valid json string.
-    result = json.loads(result)
+    def test_report_is_replicable(self):
+        experiment = _setup_experiment()
+        json_report = attention_allocation_experiment.run(experiment)
+        json_report_second = attention_allocation_experiment.run(experiment)
+        self.assertEqual(json_report, json_report_second)
 
-  def test_report_is_replicable(self):
-    experiment = _setup_experiment()
-    json_report = attention_allocation_experiment.run(experiment)
-    json_report_second = attention_allocation_experiment.run(experiment)
-    self.assertEqual(json_report, json_report_second)
+    def test_multiprocessing_works(self):
+        experiment = _setup_experiment()
+        experiment.num_workers = 5
+        experiment.num_steps = 10
+        experiment.num_runs = 5
+        result = attention_allocation_experiment.run(experiment)
+        result = json.loads(result)
 
-  def test_multiprocessing_works(self):
-    experiment = _setup_experiment()
-    experiment.num_workers = 5
-    experiment.num_steps = 10
-    experiment.num_runs = 5
-    result = attention_allocation_experiment.run(experiment)
-    result = json.loads(result)
+    def test_MLEGreedyAgent_works(self):
+        experiment = _setup_experiment()
+        experiment.agent_class = allocation_agents.MLEGreedyAgent
+        experiment.agent_params = allocation_agents.MLEGreedyAgentParams(
+            burn_steps=5, window=10, alpha=5.0
+        )
+        result = attention_allocation_experiment.run(experiment)
+        # Tests that the result is a valid json string.
+        result = json.loads(result)
 
-  def test_MLEGreedyAgent_works(self):
-    experiment = _setup_experiment()
-    experiment.agent_class = allocation_agents.MLEGreedyAgent
-    experiment.agent_params = allocation_agents.MLEGreedyAgentParams(
-        burn_steps=5, window=10, alpha=5.0)
-    result = attention_allocation_experiment.run(experiment)
-    # Tests that the result is a valid json string.
-    result = json.loads(result)
-
-  def test_MLEProbabilityMatchingAgent_works(self):
-    experiment = _setup_experiment()
-    experiment.agent_class = allocation_agents.MLEProbabilityMatchingAgent
-    experiment.agent_params = allocation_agents.MLEProbabilityMatchingAgentParams(
-        burn_steps=25, window=100)
-    result = attention_allocation_experiment.run(experiment)
-    # Tests that the result is a valid json string.
-    result = json.loads(result)
+    def test_MLEProbabilityMatchingAgent_works(self):
+        experiment = _setup_experiment()
+        experiment.agent_class = allocation_agents.MLEProbabilityMatchingAgent
+        experiment.agent_params = allocation_agents.MLEProbabilityMatchingAgentParams(
+            burn_steps=25, window=100
+        )
+        result = attention_allocation_experiment.run(experiment)
+        # Tests that the result is a valid json string.
+        result = json.loads(result)
 
 
-if __name__ == '__main__':
-  absltest.main()
+if __name__ == "__main__":
+    absltest.main()

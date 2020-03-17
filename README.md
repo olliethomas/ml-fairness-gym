@@ -16,7 +16,7 @@ This is not an officially supported Google product.
 * [Frequently asked questions](docs/FAQ.md)
 * [Using ML-fairness-gym](docs/using_ml_fairness_gym.md)
 * [Using the configurable runner](docs/using_runner.md)
-* [Environments](environments/README.md)
+* [Environments](ml_gym/environments/README.md)
 * [Experiments](experiments/README.md)
 
 

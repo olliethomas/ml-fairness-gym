@@ -8,7 +8,7 @@ Note the ML-fairness-gym is only intended to run with python 3.
 ## Running a simulation
 
 We will start with an example using the
-[lending environment](../environments/README.md).
+[lending environment](../ml_gym/environments/README.md).
 
 This environment plays out a simple simulation. There are 7 possible credit
 scores. If you have score i, there is a probability p(i) that you will pay back

@@ -150,14 +150,14 @@ See [Using ml-fairness-gym](using_ml_fairness_gym.md).
 ## I have a new environment I'd like to add; how do I do that?
 
 To create a new environment, start with the
-[environments/template.py](../environments/template.py) file. The template
+[environments/template.py](../ml_gym/environments/template.py) file. The template
 provides an outline to a FairnessEnv subclass, and describes what to fill in
 with TODO comments. For examples of already implemented environments, see the
-[environments](../environments) folder for:
+[environments](../ml_gym/environments) folder for:
 
-*   [college_admission](../environments/college_admission.py)
-*   [lending](../environments/lending.py)
-*   [attention_allocation](../environments/attention_allocation.py).
+*   [college_admission](../ml_gym/environments/college_admission.py)
+*   [lending](../ml_gym/environments/lending.py)
+*   [attention_allocation](../ml_gym/environments/attention_allocation.py).
 
 If you would like to add your developed environment back to the ML-fairness-gym
 repo, please see the [contributing doc](../CONTRIBUTING.md).
@@ -171,7 +171,7 @@ core.Agent and override the `_act_impl()` function. The only requirement on an
 agent is that `_act_impl()` returns an action in action_space, and receives
 observations in the observation_space.
 
-For examples of agents, see the [agents](../agents/) directory.
+For examples of agents, see the [agents](../ml_gym/agents/) directory.
 
 If you would like to add your developed agent back to the ML-fairness-gym repo,
 please see the [contributing doc](../CONTRIBUTING.md).
@@ -182,7 +182,7 @@ The base metric class is in [core.py](../core.py). To make your own metric,
 subclass core.Metric and override the `measure(env)` function. For a simple
 example of a metric that calculates the sum of a state variable over the
 environment’s history, see `SummingMetric` in
-[value_tracking_metrics.py](../metrics/value_tracking_metrics.py).
+[value_tracking_metrics.py](../ml_gym/metrics/value_tracking_metrics.py).
 
 If you would like to add your developed metric back to the ML-fairness-gym repo,
 please see the [contributing doc](../CONTRIBUTING.md).
